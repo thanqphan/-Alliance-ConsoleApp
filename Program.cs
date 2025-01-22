@@ -1,33 +1,37 @@
-﻿class Program
+﻿using System;
+
+class Program
 {
     static void Main(string[] args)
     {
-        Console.WriteLine("Nhap size cua array:");
-        int size = int.Parse(Console.ReadLine());
-        if (size <= 0)
-            return;
-        int[] a = new int[size];
+        Console.WriteLine("Nhap tieng meow keu:");
+        string x = Console.ReadLine();
 
-        Console.WriteLine("Nhap phan tu cua array:");
-        for (int i = 0; i < a.Length; i++)
+        if (string.IsNullOrEmpty(x))
         {
-            Console.WriteLine($"Phan tu thu {i + 1}:");
-            a[i] = int.Parse(Console.ReadLine());
+            Console.WriteLine("Chuoi khong hop le!");
+            return;
         }
 
-        Console.WriteLine("Nhap phan tu can tim:");
-        int n = int.Parse(Console.ReadLine());
-
-        bool result = CheckNumInArray(a, size, n);
+        bool result = IsMeowSound(x);
         Console.WriteLine(result);
     }
-    public static bool CheckNumInArray(int[] A, int size, int n)
+
+    public static bool IsMeowSound(string x)
     {
-        for (int i = 0; i < size; i++)
+        string pattern = "meow";
+        int currentPatternIndex = 0;
+
+        foreach (char currentChar in x)
         {
-            if (A[i] == n)
-                return true;
+            if (currentChar == pattern[currentPatternIndex])
+                continue;
+            else if (currentPatternIndex < pattern.Length - 1 && currentChar == pattern[currentPatternIndex + 1])
+                currentPatternIndex++;
+            else
+                return false;
         }
-        return false;
+
+        return currentPatternIndex == pattern.Length - 1;
     }
 }
