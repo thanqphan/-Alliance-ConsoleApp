@@ -1,37 +1,38 @@
-﻿using System;
+﻿using System.Globalization;
+using System.Text.RegularExpressions;
 
 class Program
 {
     static void Main(string[] args)
     {
-        Console.WriteLine("Nhap tieng meow keu:");
-        string x = Console.ReadLine();
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-        if (string.IsNullOrEmpty(x))
+        string[] names = {
+            "Nguyễn  vAn Thanh",
+            " trần   thị Nhung.",
+            "Huỳnh Thúc Điền.",
+            "Lê van  NaM"
+        };
+
+        Console.WriteLine("Data Dep:");
+        foreach (var name in names)
         {
-            Console.WriteLine("Chuoi khong hop le!");
-            return;
+            Console.WriteLine(FormatName(name));
         }
-
-        bool result = IsMeowSound(x);
-        Console.WriteLine(result);
     }
 
-    public static bool IsMeowSound(string x)
+    public static string FormatName(string name)
     {
-        string pattern = "meow";
-        int currentPatternIndex = 0;
+        if (string.IsNullOrWhiteSpace(name))
+            return "--Ten Loi--";
 
-        foreach (char currentChar in x)
-        {
-            if (currentChar == pattern[currentPatternIndex])
-                continue;
-            else if (currentPatternIndex < pattern.Length - 1 && currentChar == pattern[currentPatternIndex + 1])
-                currentPatternIndex++;
-            else
-                return false;
-        }
+        name = Regex.Replace(name, @"[^\p{L}\s]", "");
 
-        return currentPatternIndex == pattern.Length - 1;
+        var formattedName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(
+            name.ToLower().Trim()
+                .Replace("  ", " ")
+        );
+
+        return formattedName;
     }
 }
