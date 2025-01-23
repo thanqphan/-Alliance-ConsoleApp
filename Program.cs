@@ -2,18 +2,23 @@
 {
     static void Main(string[] args)
     {
-        Console.WriteLine("Nhap path cua folder:");
-        string pathOfFolder = Console.ReadLine();
+        //giảm lần truy cập db ; giảm lỗi khi khong tìm được data department
+        var listStaff = [];
+        //lấy toàn bộ id department hiện có từ list staff
+        var departmentIds = listStaff.Select(s => s.DepartmentId).Distinct().ToList();
+        //lấy toàn bộ thtin department trong 1 lần
+        var departments = departmentIds.Select(id => GetDepartmentInfo(id)).ToDictionary(dep => dep.Id, dep => dep);
 
-        List<string> imageFiles = GetImageFiles(pathOfFolder);
-        Console.WriteLine("Danh sach File Anh:");
-        foreach (var file in imageFiles)
+        foreach (var s in listStaff)
         {
-            Console.WriteLine(file);
+            if (departments.ContainsKey(s.DepartmentId))
+                s.DepartmentName = departments[s.DepartmentId].Name;
+            else
+                s.DepartmentName = "Unknown"; 
         }
 
     }
-    public static List<string> GetImageFiles(string pathOfFolder)
+    public static List<string> GetDepartmentInfo(string pathOfFolder)
     {
         if (string.IsNullOrEmpty(pathOfFolder) || !Directory.Exists(pathOfFolder))
         {
